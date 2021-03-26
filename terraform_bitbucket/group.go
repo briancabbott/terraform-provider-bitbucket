@@ -1,6 +1,11 @@
 package terraform_bitbucket
 
+import (
+	"context"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
 
 func ResourceGroup() *schema.Resource {
 	return &schema.Resource{
@@ -13,18 +18,19 @@ func ResourceGroup() *schema.Resource {
 		},
 		// A Bitbucket project. Projects are used by teams to organize repositories.
 		Schema: map[string] *schema.Schema {
+			
 			"links": {
 				Type: schema.TypeSet,
 				Required:    true,
 				ForceNew:    true,
-				Description: ""
-				Elem: &schema.Resource{
+				Description: "",
+				Elem: &map[string]*schema.Schema{
 					"self": {
 						Type: schema.TypeSet,
 						Required:    true,
 						ForceNew:    true,
 						Description: "",
-						Elem: &schema.Resource{
+						Elem: &map[string]*schema.Schema{
 							"href": {
 								Type: schema.TypeSet,
 								Required:    true,
@@ -44,7 +50,7 @@ func ResourceGroup() *schema.Resource {
 						Required:    true,
 						ForceNew:    true,
 						Description: "",
-						Elem: &schema.Resource{
+						Elem: &map[string]*schema.Schema{
 							"href": {
 								Type: schema.TypeSet,
 								Required:    true,
@@ -85,27 +91,27 @@ func ResourceGroup() *schema.Resource {
 				Type: schema.TypeSet,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The 'sluggified' version of the group's name. This contains only ASCII characters and can therefore be slightly different than the name full_slug"
-			}
-		}
+				Description: "The 'sluggified' version of the group's name. This contains only ASCII characters and can therefore be slightly different than the name full_slug",
+			},
+		},
 	}
 }
 
 
-func GroupCreate() *schema.Resource {
-
+func GroupCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	return nil
 }
 
-func GroupRead() *schema.Resource {
-
+func GroupRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	return nil
 }
 
-func GroupUpdate() *schema.Resource {
-
+func GroupUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	return nil
 }
 
-func GroupDelete() *schema.Resource { 
-
+func GroupDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics { 
+	return nil
 }
 
 

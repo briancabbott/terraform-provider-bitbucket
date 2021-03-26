@@ -48,50 +48,50 @@ func ResourceProject() *schema.Resource {
 			"links": {
 				Type:        schema.TypeList,
 				Required:    true,
-				ForceNew:    true,
+				ForceNew:    true,	
 				Description: "",
-				Elem: &schema.Resource{
+				Elem: &map[string]*schema.Schema{
 					"html": {
 						Type:         schema.TypeString,
 						Required:     true,
 						ForceNew:     true,
-						ValidateFunc: ValidateResourceType,
+						// ValidateFunc: ValidateResourceType,
 
 						
  						Description: "A link to a resource related to this object.",
-						Elem: &schema.Resource{
+						Elem: &map[string]*schema.Schema{
 							"href": {
 								Type: schema.TypeString,
 								Required:     true,
 								ForceNew:     true,
-								ValidateFunc: ValidateResourceType,
+								// ValidateFunc: ValidateResourceType,
 							},
 							"name": {
 								Type: 		  schema.TypeString,
 								Required:     true,
 								ForceNew:     true,
-								ValidateFunc: ValidateResourceType,
-							}
-						}
+								// ValidateFunc: ValidateResourceType,
+							},
+						},
 					},
 					"avatar": {
 						Type:     schema.TypeString,
 						Required: true,
 						ForceNew: true,
 						Description: "A link to a resource related to this object.",
-						Elem: 
-						"href": {
-							Type: schema.TypeString,
-							Required:     true,
-							ForceNew:     true,
-							ValidateFunc: ValidateResourcePatternType,
-						},
-						"name": {
-							Type:         schema.TypeString,
-							Required:     true,
-							ForceNew:     true,
-							ValidateFunc: ValidateResourcePatternType,
-						},
+						// Elem: 
+						// "href": {
+						// 	Type: schema.TypeString,
+						// 	Required:     true,
+						// 	ForceNew:     true,
+						// 	ValidateFunc: ValidateResourcePatternType,
+						// },
+						// "name": {
+						// 	Type:         schema.TypeString,
+						// 	Required:     true,
+						// 	ForceNew:     true,
+						// 	ValidateFunc: ValidateResourcePatternType,
+						// },
 					},
 				},
 			},
@@ -144,5 +144,21 @@ func ResourceProject() *schema.Resource {
 				Description: "",
 			},
 		},
-	},
+	}
+}
+
+func ProjectCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	return nil
+}
+
+func ProjectRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	return nil
+}
+
+func ProjectUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	return nil
+}
+
+func ProjectDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	return nil
 }

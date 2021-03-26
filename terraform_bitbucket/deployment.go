@@ -1,6 +1,11 @@
 package terraform_bitbucket
 
+import (
+	"context"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
 
 
 ///
@@ -24,23 +29,24 @@ func ResourceDeployment() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"uuid": {
 				Type: schema.TypeString,
-				Description: "The UUID identifying the deployment."
+				Description: "The UUID identifying the deployment.",
 			},
-			"state": {
-				"$ref": "#/definitions/deployment_state"
-				"deployment_state": {
-					"allOf": [
-						{
-							"$ref": "#/definitions/object"
-						},
-						{
-							"additionalProperties": true,
-							"type": "object",
-							"description": "The representation of the progress state of a deployment.",
-							"properties": {}
-						}
-					]
-				},
+		},
+			// "state": {
+			// 	"$ref": "#/definitions/deployment_state"
+			// 	"deployment_state": {
+			// 		"allOf": [
+			// 			{
+			// 				"$ref": "#/definitions/object"
+			// 			},
+			// 			{
+			// 				"additionalProperties": true,
+			// 				"type": "object",
+			// 				"description": "The representation of the progress state of a deployment.",
+			// 				"properties": {}
+			// 			}
+			// 		]
+			// 	},
 
 				// "deployment_state_completed_status": {
 				// 	"allOf": [
@@ -158,10 +164,10 @@ func ResourceDeployment() *schema.Resource {
 				// 		}
 				// 	]
 				// },
-			},
-			"environment": {
-				"$ref": "#/definitions/deployment_environment",
-				"description": "A deployment environment."
+			// },
+			// "environment": {
+			// 	"$ref": "#/definitions/deployment_environment",
+			// 	"description": "A deployment environment."
 				// "deployment_environment": {
 				// 	"allOf": [
 				// 		{
@@ -188,26 +194,41 @@ func ResourceDeployment() *schema.Resource {
 				// 	],
 				// 	"x-bb-url": "/rest/2.0/accounts/{target_user.uuid}/repositories/{repository.uuid}/environments/{uuid}"
 				// },
-			},
-			"release": {
-				"$ref": "#/definitions/deployment_release",
-				"description": "The release associated with this deployment."
-			}
-			"allOf": [
-                {
-                    "$ref": "#/definitions/object"
-                },
-                {
-                    "additionalProperties": true,
-                    "type": "object",
-                    "description": "A Bitbucket Deployment.",
-                    "properties": {
+			// },
+			// "release": {
+			// 	"$ref": "#/definitions/deployment_release",
+			// 	"description": "The release associated with this deployment."
+			// }
+			// "allOf": [
+            //     {
+            //         "$ref": "#/definitions/object"
+            //     },
+            //     {
+            //         "additionalProperties": true,
+            //         "type": "object",
+            //         "description": "A Bitbucket Deployment.",
+            //         "properties": {
                         
-                    }
-                }
-            ]
-        },
+            //         }
+            //     }
+            // ]
+        // },
 	}
 }
 
+func DeploymentCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	return nil
+}
+
+func DeploymentRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	return nil
+}
+
+func DeploymentUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	return nil
+} 
+
+func DeploymentDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	return nil
+}
 
