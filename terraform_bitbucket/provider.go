@@ -20,9 +20,9 @@ func Provider() *schema.Provider {
 		ConfigureContextFunc: providerConfigure,
 		ResourcesMap: map[string]*schema.Resource{
 			"truemark-bitbucket_deployment": resourceDeployment(),
-			// "truemark-bitbucket_group": resourceGroup(),
-			// "truemark-bitbucket_project": resourceProject(),
-			// "truemark-bitbucket_repository": resourceRepository(),
+			"truemark-bitbucket_group": resourceGroup(),
+			"truemark-bitbucket_project": resourceProject(),
+			"truemark-bitbucket_repository": resourceRepository(),
 		},
 	}
 }

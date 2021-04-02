@@ -5,8 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
-
 
 ///
 // Deployment Schema:
@@ -18,201 +18,325 @@ import (
 func ResourceDeployment() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: DeploymentCreate,
-		ReadContext: DeploymentRead,
-		UpdateContext: DeploymentUpdate, 
+		ReadContext:   DeploymentRead,
+		UpdateContext: DeploymentUpdate,
 		DeleteContext: DeploymentDelete,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 
+		////
+		// TypeBool
+		// TypeInt
+		// TypeFloat
+		// TypeString
+		//   // Date & Time Data
+		// 		Type:         schema.TypeString,
+		// 		ValidateFunc: validation.ValidateRFC3339TimeString,
+		// TypeList
+		// TypeMap
+		// TypeSet
+
 		// A Bitbucket project. Projects are used by teams to organize repositories.
 		Schema: map[string]*schema.Schema{
 			"uuid": {
-				Type: schema.TypeString,
+				Type:        schema.TypeString,
 				Description: "The UUID identifying the deployment.",
 			},
-		},
-			// "state": {
-			// 	"$ref": "#/definitions/deployment_state"
-			// 	"deployment_state": {
-			// 		"allOf": [
-			// 			{
-			// 				"$ref": "#/definitions/object"
-			// 			},
-			// 			{
-			// 				"additionalProperties": true,
-			// 				"type": "object",
-			// 				"description": "The representation of the progress state of a deployment.",
-			// 				"properties": {}
-			// 			}
-			// 		]
-			// 	},
+			"state": {
+				Type:        schema.TypeList,
+				Required:    true,
+				ForceNew:    true,
+				Description: "",
+				// "$ref": "#/definitions/deployment_state"
+				Elem: &map[string]*schema.Schema{
+					// "deployment_state": {
+					// 	Type:         schema.TypeString,
+					// 	Required:     true,
+					// 	ForceNew:     true,
+					// 	Description:  "The representation of the progress state of a deployment.",
+					// 	ValidateFunc: validation.ValidateRFC3339TimeString,
+					// },
+					"deployment_state_completed_status": {
+						Type:         schema.TypeString,
+						Required:     true,
+						ForceNew:     true,
+						Description:  "The status of a completed deployment.",
+						ValidateFunc: validation.ValidateRFC3339TimeString,
+					},
+					"deployment_state_in_progress": {
+						Type:        schema.TypeList,
+						Required:    true,
+						ForceNew:    true,
+						Description: "A Bitbucket Deployment IN_PROGRESS deployment state.",
+						Enum: &map[string]*schema.Schema{
+							"name": {
+								// "enum": [
+								// 	"IN_PROGRESS"
+								// ],
+								Type:        schema.TypeList,
+								Required:    true,
+								ForceNew:    true,
+								Description: "The name of deployment state (IN_PROGRESS).",
+								Enum: &map[string]*schema.Schema{
+									"IN_PROGRESS": {},
+								},
+							},
+							"url": {
+								Type:        schema.TypeString,
+								Required:    true,
+								ForceNew:    true,
+								Description: "Link to the deployment result.",
 
-				// "deployment_state_completed_status": {
-				// 	"allOf": [
-				// 		{
-				// 			"$ref": "#/definitions/object"
-				// 		},
-				// 		{
-				// 			"additionalProperties": true,
-				// 			"type": "object",
-				// 			"description": "The status of a completed deployment.",
-				// 			"properties": {}
-				// 		}
-				// 	]
-				// },
-				// "deployment_state_in_progress": {
-				// 	"allOf": [
-				// 		{
-				// 			"$ref": "#/definitions/deployment_state"
-				// 		},
-				// 		{
-				// 			"additionalProperties": true,
-				// 			"type": "object",
-				// 			"description": "A Bitbucket Deployment IN_PROGRESS deployment state.",
-				// 			"properties": {
-				// 				"name": {
-				// 					"enum": [
-				// 						"IN_PROGRESS"
-				// 					],
-				// 					"type": "string",
-				// 					"description": "The name of deployment state (IN_PROGRESS)."
-				// 				},
-				// 				"url": {
-				// 					"type": "string",
-				// 					"format": "uri",
-				// 					"description": "Link to the deployment result."
-				// 				},
-				// 				"deployer": {
-				// 					"$ref": "#/definitions/account",
-				// 					"description": "The Bitbucket account that was used to perform the deployment."
-				// 				},
-				// 				"start_date": {
-				// 					"type": "string",
-				// 					"format": "date-time",
-				// 					"description": "The timestamp when the deployment was started."
-				// 				}
-				// 			}
-				// 		}
-				// 	]
-				// },
-				// "deployment_state_undeployed": {
-				// 	"allOf": [
-				// 		{
-				// 			"$ref": "#/definitions/deployment_state"
-				// 		},
-				// 		{
-				// 			"additionalProperties": true,
-				// 			"type": "object",
-				// 			"description": "A Bitbucket Deployment UNDEPLOYED deployment state.",
-				// 			"properties": {
-				// 				"name": {
-				// 					"enum": [
-				// 						"UNDEPLOYED"
-				// 					],
-				// 					"type": "string",
-				// 					"description": "The name of deployment state (UNDEPLOYED)."
-				// 				},
-				// 				"trigger_url": {
-				// 					"type": "string",
-				// 					"format": "uri",
-				// 					"description": "Link to trigger the deployment."
-				// 				}
-				// 			}
-				// 		}
-				// 	]
-				// },
-				// "deployment_state_completed_status_stopped": {
-				// 	"allOf": [
-				// 		{
-				// 			"$ref": "#/definitions/deployment_state_completed_status"
-				// 		},
-				// 		{
-				// 			"additionalProperties": true,
-				// 			"type": "object",
-				// 			"description": "A STOPPED completed deployment status.",
-				// 			"properties": {
-				// 				"name": {
-				// 					"enum": [
-				// 						"STOPPED"
-				// 					],
-				// 					"type": "string",
-				// 					"description": "The name of the completed deployment status (STOPPED)."
-				// 				}
-				// 			}
-				// 		}
-				// 	]
-				// },
-				// "deployment_state_completed_status_failed": {
-				// 	"allOf": [
-				// 		{
-				// 			"$ref": "#/definitions/deployment_state_completed_status"
-				// 		},
-				// 		{
-				// 			"additionalProperties": true,
-				// 			"type": "object",
-				// 			"description": "A FAILED completed deployment status.",
-				// 			"properties": {
-				// 				"name": {
-				// 					"enum": [
-				// 						"FAILED"
-				// 					],
-				// 					"type": "string",
-				// 					"description": "The name of the completed deployment status (FAILED)."
-				// 				}
-				// 			}
-				// 		}
-				// 	]
-				// },
-			// },
-			// "environment": {
-			// 	"$ref": "#/definitions/deployment_environment",
-			// 	"description": "A deployment environment."
-				// "deployment_environment": {
-				// 	"allOf": [
-				// 		{
-				// 			"$ref": "#/definitions/object"
-				// 		},
-				// 		{
-				// 			"additionalProperties": true,
-				// 			"type": "object",
-				// 			"description": "A Bitbucket Deployment Environment.",
-				// 			"properties": {
-				// 				"uuid": {
-				// 					"type": "string",
-				// 					"description": "The UUID identifying the environment."
-				// 				},
-				// 				"name": {
-				// 					"type": "string",
-				// 					"description": "The name of the environment."
-				// 				}
-				// 			}
-				// 		}
-				// 	],
-				// 	"x-bb-default-fields": [
-				// 		"uuid"
-				// 	],
-				// 	"x-bb-url": "/rest/2.0/accounts/{target_user.uuid}/repositories/{repository.uuid}/environments/{uuid}"
-				// },
-			// },
-			// "release": {
-			// 	"$ref": "#/definitions/deployment_release",
-			// 	"description": "The release associated with this deployment."
-			// }
-			// "allOf": [
-            //     {
-            //         "$ref": "#/definitions/object"
-            //     },
-            //     {
-            //         "additionalProperties": true,
-            //         "type": "object",
-            //         "description": "A Bitbucket Deployment.",
-            //         "properties": {
-                        
-            //         }
-            //     }
-            // ]
-        // },
+								// "type": "string",
+								// "format": "uri",
+								// "description":
+							},
+							"deployer": {
+								// "$ref": "#/definitions/account",
+								Type:        schema.TypeList,
+								Required:    true,
+								ForceNew:    true,
+								Description: "The Bitbucket account that was used to perform the deployment.",
+								//
+							},
+							"start_date": {
+								// Type: 		 schema.TypeList,
+								Required:     true,
+								ForceNew:     true,
+								Description:  "The timestamp when the deployment was started.",
+								Type:         schema.TypeString,
+								ValidateFunc: validation.ValidateRFC3339TimeString,
+								// "type": "string",
+								// "format": "date-time",
+								// "description": "The timestamp when the deployment was started."
+							},
+						},
+					},
+					"deployment_state_undeployed": {
+						Type:        schema.TypeList,
+						Required:    true,
+						ForceNew:    true,
+						Description: "A Bitbucket Deployment IN_PROGRESS deployment state.",
+						Enum: &map[string]*schema.Schema{
+							"name": {
+								// "enum": [
+								// 	"UNDEPLOYED"
+								// ],
+								Type:        schema.TypeString,
+								Required:    true,
+								ForceNew:    true,
+								Description: "The name of deployment state (UNDEPLOYED).",
+							},
+							"trigger_url": {
+								Type: schema.TypeString,
+								// "format": "uri",
+								Required:    true,
+								ForceNew:    true,
+								Description: "Link to trigger the deployment.",
+							},
+						},
+					},
+					"deployment_state_completed_status_stopped": {
+						Type: schema.TypeString,
+						// "format": "uri",
+						Required:    true,
+						ForceNew:    true,
+						Description: "Link to trigger the deployment.",
+						Enum: &map[string]*schema.Schema{
+							"name": {
+								Type:        schema.TypeString,
+								Required:    true,
+								ForceNew:    true,
+								Description: "The name of the completed deployment status (STOPPED).",
+								// "enum": [
+								// 	"STOPPED"
+								// ],
+							},
+						},
+					},
+					"deployment_state_completed_status_failed": {
+						Type: schema.TypeString,
+						// "format": "uri",
+						Required:    true,
+						ForceNew:    true,
+						Description: "Link to trigger the deployment.",
+						Enum: &map[string]*schema.Schema{
+							"name": {
+								// "enum": [
+								// 	"FAILED"
+								// ],
+								Type:        schema.TypeString,
+								Required:    true,
+								ForceNew:    true,
+								Description: "The name of the completed deployment status (FAILED).",
+							},
+						},
+					},
+				},
+			},
+			"environment": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "A deployment environment.",
+				// "$ref": "#/definitions/deployment_environment",
+				// "description": ""
+				Enum: &map[string]*schema.Schema{
+					"deployment_environment": {
+						Type:        schema.TypeList,
+						Required:    true,
+						ForceNew:    true,
+						Description: "A Bitbucket Deployment Environment.",
+						Enum: &map[string]*schema.Schema{
+							"uuid": {
+								Type:        schema.TypeString,
+								Required:    true,
+								ForceNew:    true,
+								Description: "The UUID identifying the environment.",
+							},
+							"name": {
+								Type:        schema.TypeString,
+								Required:    true,
+								ForceNew:    true,
+								Description: "The name of the environment.",
+							},
+						},
+					},
+				},
+				// "x-bb-default-fields": [
+				// 	"uuid"
+				// ],
+				// "x-bb-url": "/rest/2.0/accounts/{target_user.uuid}/repositories/{repository.uuid}/environments/{uuid}"
+			},
+			"release": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The release associated with this deployment.",
+				// "$ref": "#/definitions/deployment_release",
+				Enum: &map[string]*schema.Schema{
+					"uuid": {
+						Type:        schema.TypeString,
+						Required:    true,
+						ForceNew:    true,
+						Description: "The UUID identifying the release.",
+					},
+					"name": {
+						Type:          schema.TypeString,
+						Required:      true,
+						ForceNew:      true,
+						"description": "The name of the release.",
+					},
+					"url": {
+						Type:     schema.TypeString,
+						Required: true,
+						ForceNew: true,
+						// "format": "uri",
+						Description: "Link to the pipeline that produced the release.",
+					},
+					"commit": {
+						Type:     schema.TypeString,
+						Required: true,
+						ForceNew: true,
+						// "$ref": "#/definitions/commit",
+						Description: "The commit associated with this release.",
+
+						// "base_commit": {
+						// 	"allOf": [
+						// 		{
+						// 			"$ref": "#/definitions/object"
+						// 		},
+						// 		{
+						// 			"type": "object",
+						// 			"title": "Base Commit",
+						// 			"description": "The common base type for both repository and snippet commits.",
+						// 			"properties": {
+						// 				"hash": {
+						// 					"type": "string",
+						// 					"pattern": "[0-9a-f]{7,}?"
+						// 				},
+						// 				"date": {
+						// 					"type": "string",
+						// 					"format": "date-time"
+						// 				},
+						// 				"author": {
+						// 					"$ref": "#/definitions/author"
+						// 				},
+						// 				"message": {
+						// 					"type": "string"
+						// 				},
+						// 				"summary": {
+						// 					"type": "object",
+						// 					"properties": {
+						// 						"raw": {
+						// 							"type": "string",
+						// 							"description": "The text as it was typed by a user."
+						// 						},
+						// 						"markup": {
+						// 							"type": "string",
+						// 							"description": "The type of markup language the raw content is to be interpreted in.",
+						// 							"enum": [
+						// 								"markdown",
+						// 								"creole",
+						// 								"plaintext"
+						// 							]
+						// 						},
+						// 						"html": {
+						// 							"type": "string",
+						// 							"description": "The user's content rendered as HTML."
+						// 						}
+						// 					},
+						// 					"additionalProperties": false
+						// 				},
+						// 				"parents": {
+						// 					"type": "array",
+						// 					"items": {
+						// 						"$ref": "#/definitions/base_commit"
+						// 					},
+						// 					"minItems": 0
+						// 				}
+						// 			},
+						// 			"additionalProperties": true
+						// 		}
+						// 	]
+						// },
+
+						// "allOf": [
+						// 	{
+						// 		"$ref": "#/definitions/base_commit"
+						// 	},
+						// 	{
+						// 		"type": "object",
+						// 		"title": "Commit",
+						// 		"description": "A repository commit object.",
+						// 		"properties": {
+						// 			"repository": {
+						// 				"$ref": "#/definitions/repository"
+						// 			},
+						// 			"participants": {
+						// 				"type": "array",
+						// 				"items": {
+						// 					"$ref": "#/definitions/participant"
+						// 				},
+						// 				"minItems": 0
+						// 			}
+						// 		},
+						// 		"additionalProperties": true
+						// 	}
+						// ]
+						Enum: &map[string]*schema.Schema{},
+					},
+					"created_on": {
+						Type:         schema.TypeString,
+						Required:     true,
+						ForceNew:     true,
+						Description:  "The timestamp when the release was created.",
+						ValidateFunc: validation.ValidateRFC3339TimeString,
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -226,9 +350,8 @@ func DeploymentRead(ctx context.Context, d *schema.ResourceData, meta interface{
 
 func DeploymentUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	return nil
-} 
+}
 
 func DeploymentDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	return nil
 }
-

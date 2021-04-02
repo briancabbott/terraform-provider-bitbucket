@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
+
 // // No Read or Update for Service-Account
 // func resourceServiceAccount() *schema.Resource {
 // 	return &schema.Resource{
@@ -36,50 +37,49 @@ import (
 func ResourceProject() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: ProjectCreate,
-		ReadContext: ProjectRead,
-		UpdateContext: ProjectUpdate, 
+		ReadContext:   ProjectRead,
+		UpdateContext: ProjectUpdate,
 		DeleteContext: ProjectDelete,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		// A Bitbucket project. Projects are used by teams to organize repositories.
-		Schema: map[string] *schema.Schema {
+		Schema: map[string]*schema.Schema{
 			"links": {
 				Type:        schema.TypeList,
 				Required:    true,
-				ForceNew:    true,	
+				ForceNew:    true,
 				Description: "",
 				Elem: &map[string]*schema.Schema{
 					"html": {
-						Type:         schema.TypeString,
-						Required:     true,
-						ForceNew:     true,
+						Type:     schema.TypeString,
+						Required: true,
+						ForceNew: true,
 						// ValidateFunc: ValidateResourceType,
 
-						
- 						Description: "A link to a resource related to this object.",
+						Description: "A link to a resource related to this object.",
 						Elem: &map[string]*schema.Schema{
 							"href": {
-								Type: schema.TypeString,
-								Required:     true,
-								ForceNew:     true,
+								Type:     schema.TypeString,
+								Required: true,
+								ForceNew: true,
 								// ValidateFunc: ValidateResourceType,
 							},
 							"name": {
-								Type: 		  schema.TypeString,
-								Required:     true,
-								ForceNew:     true,
+								Type:     schema.TypeString,
+								Required: true,
+								ForceNew: true,
 								// ValidateFunc: ValidateResourceType,
 							},
 						},
 					},
 					"avatar": {
-						Type:     schema.TypeString,
-						Required: true,
-						ForceNew: true,
+						Type:        schema.TypeString,
+						Required:    true,
+						ForceNew:    true,
 						Description: "A link to a resource related to this object.",
-						// Elem: 
+						// Elem:
 						// "href": {
 						// 	Type: schema.TypeString,
 						// 	Required:     true,
